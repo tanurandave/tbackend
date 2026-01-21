@@ -13,15 +13,21 @@ public class SubjectService {
     private final SubjectRepository subjectRepository;
     private final TopicRepository topicRepository;
     private final SubjectTopicRepository subjectTopicRepository;
+    private final TrainerSubjectRepository trainerSubjectRepository;
+    private final TrainerRepository trainerRepository;
 
     public SubjectService(
             SubjectRepository subjectRepository,
             TopicRepository topicRepository,
-            SubjectTopicRepository subjectTopicRepository
+            SubjectTopicRepository subjectTopicRepository,
+            TrainerSubjectRepository trainerSubjectRepository,
+            TrainerRepository trainerRepository
     ) {
         this.subjectRepository = subjectRepository;
         this.topicRepository = topicRepository;
         this.subjectTopicRepository = subjectTopicRepository;
+        this.trainerSubjectRepository = trainerSubjectRepository;
+        this.trainerRepository = trainerRepository;
     }
 
     public Subject addSubject(Subject subject) {
@@ -84,6 +90,17 @@ public class SubjectService {
 
     public SubjectWithTrainers getSubjectWithTrainers(Long id) {
         Subject subject = subjectRepository.findById(id).orElse(null);
-        return subject == null ? null : new SubjectWithTrainers(subject, List.of());
+        if (subject == null) {
+            return null;
+        }
+
+        // Fetch assigned trainers for the subject
+        List<TrainerSubject> assignments = trainerSubjectRepository.findBySubjectId(id);
+        List<Trainer> trainers = assignments.stream()
+                .map(assignment -> trainerRepository.findById(assignment.getEmpId()).orElse(null))
+                .filter(trainer -> trainer != null)
+                .collect(Collectors.toList());
+
+        return new SubjectWithTrainers(subject, trainers);
     }
 }
