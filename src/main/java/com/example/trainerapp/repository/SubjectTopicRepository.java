@@ -12,4 +12,6 @@ public interface SubjectTopicRepository extends JpaRepository<SubjectTopic, Long
     boolean existsBySubjectIdAndTopicId(Long subjectId, Long topicId);
 
     void deleteBySubjectIdAndTopicId(Long subjectId, Long topicId);
+
+    void deleteBySubjectId(Long subjectId);
 }

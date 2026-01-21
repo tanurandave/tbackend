@@ -61,4 +61,9 @@ public void addTopicsToSubject(
     ) {
         subjectService.removeTopicFromSubject(subjectId, topicId);
     }
+
+    @DeleteMapping("/{id}")
+    public void deleteSubject(@PathVariable Long id) {
+        subjectService.deleteSubject(id);
+    }
 }

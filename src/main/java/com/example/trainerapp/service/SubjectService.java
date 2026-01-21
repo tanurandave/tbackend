@@ -75,6 +75,13 @@ public class SubjectService {
         subjectTopicRepository.deleteBySubjectIdAndTopicId(subjectId, topicId);
     }
 
+    public void deleteSubject(Long id) {
+        // Delete related subject-topic mappings first
+        subjectTopicRepository.deleteBySubjectId(id);
+        // Then delete the subject
+        subjectRepository.deleteById(id);
+    }
+
     public SubjectWithTrainers getSubjectWithTrainers(Long id) {
         Subject subject = subjectRepository.findById(id).orElse(null);
         return subject == null ? null : new SubjectWithTrainers(subject, List.of());
