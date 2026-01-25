@@ -23,7 +23,7 @@ public class TrainerSubject {
 
     @Column(name = "emp_id", nullable = false)
     private Long empId;
-    
+
     @Column(name = "subject_id", nullable = false)
     private Long subjectId;
 
@@ -32,4 +32,20 @@ public class TrainerSubject {
 
     @Column(name = "subject_name", nullable = false)
     private String subjectName;
+
+    public Long getEmpId() {
+        return empId;
+    }
+
+    public void setEmpId(Long empId) {
+        this.empId = empId;
+    }
+
+    public Long getSubjectId() {
+        return subjectId;
+    }
+
+    public void setSubjectId(Long subjectId) {
+        this.subjectId = subjectId;
+    }
 }

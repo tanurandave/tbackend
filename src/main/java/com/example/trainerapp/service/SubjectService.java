@@ -3,6 +3,7 @@ package com.example.trainerapp.service;
 import com.example.trainerapp.entity.*;
 import com.example.trainerapp.repository.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,19 +16,22 @@ public class SubjectService {
     private final SubjectTopicRepository subjectTopicRepository;
     private final TrainerSubjectRepository trainerSubjectRepository;
     private final TrainerRepository trainerRepository;
+    private final TopicsSubjectDataRepository topicsSubjectDataRepository;
 
     public SubjectService(
             SubjectRepository subjectRepository,
             TopicRepository topicRepository,
             SubjectTopicRepository subjectTopicRepository,
             TrainerSubjectRepository trainerSubjectRepository,
-            TrainerRepository trainerRepository
+            TrainerRepository trainerRepository,
+            TopicsSubjectDataRepository topicsSubjectDataRepository
     ) {
         this.subjectRepository = subjectRepository;
         this.topicRepository = topicRepository;
         this.subjectTopicRepository = subjectTopicRepository;
         this.trainerSubjectRepository = trainerSubjectRepository;
         this.trainerRepository = trainerRepository;
+        this.topicsSubjectDataRepository = topicsSubjectDataRepository;
     }
 
     public Subject addSubject(Subject subject) {
@@ -81,10 +85,32 @@ public class SubjectService {
         subjectTopicRepository.deleteBySubjectIdAndTopicId(subjectId, topicId);
     }
 
+    @Transactional
     public void deleteSubject(Long id) {
-        // Delete related subject-topic mappings first
+        // Delete trainer-subject assignments first
+        trainerSubjectRepository.deleteBySubjectId(id);
+
+        // Delete topics-subject-data assignments
+        topicsSubjectDataRepository.deleteBySubjectId(id);
+
+        // Get topicIds for this subject
+        List<Long> topicIds = subjectTopicRepository.findBySubjectId(id).stream()
+                .map(SubjectTopic::getTopicId)
+                .collect(Collectors.toList());
+
+        // Delete topics that are not associated with other subjects
+        for (Long topicId : topicIds) {
+            if (subjectTopicRepository.countByTopicIdAndSubjectIdNot(topicId, id) == 0) {
+                // Also delete from topics-subject-data if not already done
+                topicsSubjectDataRepository.deleteByTopicId(topicId);
+                topicRepository.deleteById(topicId);
+            }
+        }
+
+        // Delete subject-topic mappings
         subjectTopicRepository.deleteBySubjectId(id);
-        // Then delete the subject
+
+        // Delete the subject
         subjectRepository.deleteById(id);
     }
 
@@ -102,5 +128,13 @@ public class SubjectService {
                 .collect(Collectors.toList());
 
         return new SubjectWithTrainers(subject, trainers);
+    }
+
+    public List<Topic> getAssignedTopicsForTrainerAndSubject(Long trainerId, Long subjectId) {
+        return topicsSubjectDataRepository.findByTrainerIdAndSubjectId(trainerId, subjectId)
+                .stream()
+                .map(tsd -> topicRepository.findById(tsd.getTopicId()).orElse(null))
+                .filter(t -> t != null)
+                .collect(Collectors.toList());
     }
 }

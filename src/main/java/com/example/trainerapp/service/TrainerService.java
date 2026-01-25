@@ -54,4 +54,8 @@ public class TrainerService {
                 .filter(s -> s != null)
                 .toList();
     }
+
+    public List<Trainer> getTrainersBySubjectId(Long subjectId) {
+        return trainerRepository.findTrainersBySubjectId(subjectId);
+    }
 }

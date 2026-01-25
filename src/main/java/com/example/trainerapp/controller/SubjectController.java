@@ -37,6 +37,11 @@ public class SubjectController {
         return subjectService.getTopicsForSubject(id);
     }
 
+    @GetMapping("/trainer/{trainerId}/subject/{subjectId}/topics")
+    public List<Topic> getAssignedTopicsForTrainerAndSubject(@PathVariable Long trainerId, @PathVariable Long subjectId) {
+        return subjectService.getAssignedTopicsForTrainerAndSubject(trainerId, subjectId);
+    }
+
     // 🔥 MAIN API YOU WANTED
     // @PostMapping("/{subjectId}/topics")
     // public void addTopicsToSubject(

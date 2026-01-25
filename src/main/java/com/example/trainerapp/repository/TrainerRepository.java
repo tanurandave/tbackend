@@ -16,4 +16,11 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long> {
         WHERE s.subjectName = :subjectName
     """)
     List<Trainer> findTrainersBySubjectName(@Param("subjectName") String subjectName);
+
+    @Query("""
+        SELECT t FROM Trainer t
+        JOIN TrainerSubject ts ON t.empId = ts.empId
+        WHERE ts.subjectId = :subjectId
+    """)
+    List<Trainer> findTrainersBySubjectId(@Param("subjectId") Long subjectId);
 }
