@@ -67,4 +67,10 @@ public class TrainerController {
     public ResponseEntity<List<TrainerWithTopics>> getTrainersForSubject(@PathVariable Long subjectId) {
         return ResponseEntity.ok(trainerService.getTrainersWithTopicsBySubjectId(subjectId));
     }
+
+    // ✅ GET TRAINERS ASSIGNED TO A SUBJECT
+    @GetMapping("/subject/{subjectId}")
+    public ResponseEntity<List<Trainer>> getTrainersBySubjectId(@PathVariable Long subjectId) {
+        return ResponseEntity.ok(trainerService.getTrainersBySubjectId(subjectId));
+    }
 }
