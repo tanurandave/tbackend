@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 
 @Service
 public class SubjectService {
@@ -136,5 +137,18 @@ public class SubjectService {
                 .map(tsd -> topicRepository.findById(tsd.getTopicId()).orElse(null))
                 .filter(t -> t != null)
                 .collect(Collectors.toList());
+    }
+
+    public List<TopicWithTrainer> getAssignedTopicsWithTrainersForSubject(Long subjectId) {
+        List<TopicsSubjectData> assignments = topicsSubjectDataRepository.findBySubjectId(subjectId);
+        List<TopicWithTrainer> result = new ArrayList<>();
+        for (TopicsSubjectData tsd : assignments) {
+            Topic topic = topicRepository.findById(tsd.getTopicId()).orElse(null);
+            Trainer trainer = trainerRepository.findById(tsd.getTrainerId()).orElse(null);
+            if (topic != null && trainer != null) {
+                result.add(new TopicWithTrainer(topic.getTopicId(), topic.getTopicName(), topic.getDescription(), trainer.getEmpId(), trainer.getName()));
+            }
+        }
+        return result;
     }
 }

@@ -2,7 +2,6 @@ package com.example.trainerapp.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import java.util.List;
 
 @Data

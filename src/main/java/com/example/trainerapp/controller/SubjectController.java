@@ -37,6 +37,11 @@ public class SubjectController {
         return subjectService.getTopicsForSubject(id);
     }
 
+    @GetMapping("/{subjectId}/assigned-topics")
+    public List<TopicWithTrainer> getAssignedTopicsWithTrainersForSubject(@PathVariable Long subjectId) {
+        return subjectService.getAssignedTopicsWithTrainersForSubject(subjectId);
+    }
+
     @GetMapping("/trainer/{trainerId}/subject/{subjectId}/topics")
     public List<Topic> getAssignedTopicsForTrainerAndSubject(@PathVariable Long trainerId, @PathVariable Long subjectId) {
         return subjectService.getAssignedTopicsForTrainerAndSubject(trainerId, subjectId);
