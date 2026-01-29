@@ -2,7 +2,6 @@ package com.example.trainerapp.controller;
 
 import com.example.trainerapp.entity.Topic;
 import com.example.trainerapp.service.TopicService;
-import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public class TopicController {
     }
 
 @PostMapping
-public Topic addTopic(@Valid @RequestBody Topic topic) {
+public Topic addTopic(@RequestBody Topic topic) {
     return topicService.addTopic(topic);
 }
 
@@ -36,7 +35,7 @@ public Topic addTopic(@Valid @RequestBody Topic topic) {
     }
 
     @PostMapping("/subject/{subjectId}")
-    public Topic addTopicToSubject(@PathVariable Long subjectId, @Valid @RequestBody Topic topic) {
+    public Topic addTopicToSubject(@PathVariable Long subjectId, @RequestBody Topic topic) {
         return topicService.addTopicToSubject(subjectId, topic);
     }
 

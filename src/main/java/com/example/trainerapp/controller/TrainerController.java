@@ -2,6 +2,7 @@ package com.example.trainerapp.controller;
 
 import com.example.trainerapp.entity.Trainer;
 import com.example.trainerapp.entity.Subject;
+import com.example.trainerapp.entity.TrainerWithTopics;
 import com.example.trainerapp.service.TrainerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +64,7 @@ public class TrainerController {
 
     // ✅ GET TRAINERS FOR A SUBJECT (TOPIC ASSIGNMENT)
     @GetMapping("/subject/{subjectId}/topic")
-    public ResponseEntity<List<Trainer>> getTrainersForSubject(@PathVariable Long subjectId) {
-        return ResponseEntity.ok(trainerService.getTrainersBySubjectId(subjectId));
+    public ResponseEntity<List<TrainerWithTopics>> getTrainersForSubject(@PathVariable Long subjectId) {
+        return ResponseEntity.ok(trainerService.getTrainersWithTopicsBySubjectId(subjectId));
     }
 }

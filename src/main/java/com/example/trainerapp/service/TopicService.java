@@ -6,6 +6,7 @@ import com.example.trainerapp.repository.SubjectTopicRepository;
 import com.example.trainerapp.repository.TopicRepository;
 import com.example.trainerapp.repository.TopicsSubjectDataRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -52,6 +53,7 @@ public class TopicService {
         return savedTopic;
     }
 
+    @Transactional
     public void deleteTopicFromSubject(Long subjectId, Long topicId) {
         subjectTopicRepository.deleteBySubjectIdAndTopicId(subjectId, topicId);
         // Check if the topic is associated with any other subjects
