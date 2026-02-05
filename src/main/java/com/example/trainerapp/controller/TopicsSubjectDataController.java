@@ -45,4 +45,10 @@ public class TopicsSubjectDataController {
         topicsSubjectDataService.unassignTopicFromTrainer(subjectId, trainerId, topicId);
         return ResponseEntity.noContent().build();
     }
+
+    @DeleteMapping("/unassign-all")
+    public ResponseEntity<Void> unassignAllTopicsFromTrainerAndSubject(@RequestParam Long trainerId, @RequestParam Long subjectId) {
+        topicsSubjectDataService.unassignAllTopicsFromTrainerAndSubject(trainerId, subjectId);
+        return ResponseEntity.noContent().build();
+    }
 }

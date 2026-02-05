@@ -33,4 +33,9 @@ public class TopicsSubjectDataService {
                 .filter(assignment -> assignment.getTopicId().equals(topicId))
                 .forEach(topicsSubjectDataRepository::delete);
     }
+
+    public void unassignAllTopicsFromTrainerAndSubject(Long trainerId, Long subjectId) {
+        List<TopicsSubjectData> assignments = topicsSubjectDataRepository.findByTrainerIdAndSubjectId(trainerId, subjectId);
+        assignments.forEach(topicsSubjectDataRepository::delete);
+    }
 }

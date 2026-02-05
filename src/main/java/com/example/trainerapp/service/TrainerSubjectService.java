@@ -2,10 +2,12 @@ package com.example.trainerapp.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import com.example.trainerapp.entity.TrainerSubject;
 import com.example.trainerapp.repository.TrainerSubjectRepository;
 import com.example.trainerapp.repository.TrainerRepository;
 import com.example.trainerapp.repository.SubjectRepository;
+import com.example.trainerapp.repository.TopicsSubjectDataRepository;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,9 @@ public class TrainerSubjectService {
 
     @Autowired
     private SubjectRepository subjectRepository;
+
+    @Autowired
+    private TopicsSubjectDataRepository topicsSubjectDataRepository;
 
     /**
      * Get all trainer-subject assignments
@@ -92,9 +97,16 @@ public class TrainerSubjectService {
      * Delete assignment by trainer and subject
      * Uses optimized delete query
      */
+    @Transactional
     public boolean deleteAssignment(Long empId, Long subjectId) {
         try {
+            // First, delete all related topics-subject-data entries
+            int topicsDeleted = topicsSubjectDataRepository.deleteByTrainerIdAndSubjectId(empId, subjectId);
+            System.out.println("Deleted " + topicsDeleted + " topics-subject-data entries for trainer " + empId + " and subject " + subjectId);
+
+            // Then delete the trainer-subject assignment
             int deletedCount = trainerSubjectRepository.deleteByEmpIdAndSubjectId(empId, subjectId);
+            System.out.println("Deleted " + deletedCount + " trainer-subject assignments for trainer " + empId + " and subject " + subjectId);
             return deletedCount > 0;
         } catch (Exception e) {
             System.out.println("Error deleting assignment: " + e.getMessage());
